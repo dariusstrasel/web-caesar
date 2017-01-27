@@ -36,6 +36,12 @@ def build_page(textarea_content):
     return content
 
 
+def error_page():
+    header_message = "Error! Your input was invalid. Please try again."
+    header = "<h1>" + header_message + "</h1>"
+    return header
+
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         content = build_page("")
@@ -43,11 +49,17 @@ class MainHandler(webapp2.RequestHandler):
 
     def post(self):
         keyvalue = self.request.get("message")
-        rotation = int(self.request.get('rotation'))
-        encrypted_message = caesar.encrypt(keyvalue, rotation)
-        escaped_message = cgi.escape(encrypted_message)
-        content = build_page(escaped_message)
-        self.response.write(content)
+        rotation_value = self.request.get('rotation')
+
+        if not isinstance(rotation_value, int):
+            content = error_page()
+            return self.response.write(content)
+        else:
+            rotation = int(self.request.get('rotation'))
+            encrypted_message = caesar.encrypt(keyvalue, rotation)
+            escaped_message = cgi.escape(encrypted_message)
+            content = build_page(escaped_message)
+            return self.response.write(content)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
