@@ -22,8 +22,12 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         header_message = "Enter some text to ROT13: "
         header_message_encrypted = caesar.encrypt(header_message, 13)
-        header = "<h1>" + header_message_encrypted + "</h1>"
-        content = header
+        header = "<h1>" + header_message + "</h1>"
+        input_form = '<br>' + '<input type="submit">' + '</input>'
+        form_parent = '<form method="post"> {0} {1} </form>'
+        text_area = '<textarea name="text">' + header_message_encrypted + '</textarea>'
+        form = form_parent.format(text_area, input_form)
+        content = header + form
         self.response.write(content)
 
 app = webapp2.WSGIApplication([
