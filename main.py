@@ -43,6 +43,13 @@ def error_page():
     return header
 
 
+def input_is_valid(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         content = build_page("")
@@ -51,8 +58,7 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         keyvalue = self.request.get("message")
         rotation_value = self.request.get('rotation')
-
-        if not isinstance(rotation_value, int):
+        if not input_is_valid(rotation_value):
             content = error_page()
             return self.response.write(content)
         else:
